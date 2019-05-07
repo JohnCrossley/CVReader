@@ -12,7 +12,6 @@ import com.jccword.cvreader.cv.CVViewModel
 import com.jccword.cvreader.di.component.DaggerInjectableModelViewFactoryComponent
 import com.jccword.cvreader.ui.NotificationUi
 import com.jccword.cvreader.ui.ProgressUi
-import dagger.multibindings.IntKey
 import javax.inject.Inject
 
 class InjectableModelViewFactory(application: Application, mainActivity: MainActivity) : ViewModelProvider.Factory {
