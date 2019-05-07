@@ -1,5 +1,6 @@
 package com.jccword.cvreader.cv
 
+import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jccword.cvreader.R
 import com.jccword.cvreader.domain.CV
@@ -35,6 +36,9 @@ class CVViewModelTest {
     @Mock
     private lateinit var mockNotificationUi: NotificationUi
 
+    @Mock
+    private lateinit var mockResources: Resources
+
     var cv = CV()
 
     @Before
@@ -51,7 +55,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.just(cv))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi)
+        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
 
         // verify
         verify(mockProgressUi).showProgress()
@@ -63,7 +67,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.just(cv))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi)
+        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
 
         //verify
         verify(mockProgressUi).hideProgress()
@@ -75,7 +79,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.error(RuntimeException("oh no!")))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi)
+        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
 
         // verify
         verify(mockNotificationUi).run { showMessage(R.string.network_error) }
@@ -87,7 +91,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.error(RuntimeException("oh no!")))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi)
+        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
 
         // verify
         verify(mockProgressUi).run { hideProgress() }
