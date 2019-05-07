@@ -2,13 +2,16 @@ package com.jccword.cvreader.cv
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.jccword.cvreader.R
 import com.jccword.cvreader.domain.Work
 import com.jccword.cvreader.service.CVService
+import com.jccword.cvreader.ui.NotificationUi
+import com.jccword.cvreader.ui.ProgressUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class CVViewModel(cvService: CVService): ViewModel() {
+class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: NotificationUi): ViewModel() {
     private val subscriptions = CompositeDisposable()
 
     val name = MutableLiveData<String>()
@@ -21,9 +24,9 @@ class CVViewModel(cvService: CVService): ViewModel() {
 
     var work = MutableLiveData<List<Work>>()
 
-
     init {
         subscriptions.add(cvService.getCV()
+                .doOnSubscribe { progressUi.showProgress() }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cv ->
@@ -39,8 +42,10 @@ class CVViewModel(cvService: CVService): ViewModel() {
                         cv.work?.let {
                             work.value = it
                         }
+
+                        progressUi.hideProgress()
                     },
-                    { t -> println("[JCC] CVViewModel. - error $t") }
+                    { t -> notificationUi.showMessage(R.string.network_error) }
 
 
                 ))

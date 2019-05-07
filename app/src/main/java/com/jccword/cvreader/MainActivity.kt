@@ -2,7 +2,6 @@ package com.jccword.cvreader
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.jccword.cvreader.di.InjectableModelViewFactory
@@ -23,17 +22,7 @@ class MainActivity : ProgressUi, NotificationUi, DaggerAppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.addOnBackStackChangedListener {
-            println("[JCC] back stack changed: new size is ${supportFragmentManager.backStackEntryCount}")
-
-            for(i in 0 until supportFragmentManager.backStackEntryCount)
-                println("[JCC] Backstack @$i = ${supportFragmentManager.getBackStackEntryAt(i)}")
-        }
-
         model = ViewModelProviders.of(this, injectableModelViewFactory).get(MainActivityViewModel::class.java)
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
     }
 
     override fun showProgress(show: Boolean) {
