@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CV Reader</string>
     <string name="refresh">Refresh</string>
+    <string name="hypen">\u2014</string>
 </resources>
