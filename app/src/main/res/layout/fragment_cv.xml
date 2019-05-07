@@ -154,6 +154,8 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 />
 
+            <View android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
