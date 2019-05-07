@@ -35,17 +35,17 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cv ->
-                        cv.basics?.let { cv ->
-                            name.value = cv.name
-                            label.value = cv.label
-                            picture.value = cv.picture
-                            email.value = cv.email
-                            phone.value = cv.phone
-                            website.value = cv.website
-                            summary.value = cv.summary
+                        cv.basics.let { basics ->
+                            name.value = basics.name
+                            label.value = basics.label
+                            picture.value = basics.picture
+                            email.value = basics.email
+                            phone.value = basics.phone
+                            website.value = basics.website
+                            summary.value = basics.summary
                         }
 
-                        cv.work?.let {
+                        cv.work.let {
                             work.value = it
                         }
 
@@ -53,7 +53,7 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
 
                         progressUi.hideProgress()
                     },
-                    { t ->
+                    {
                         progressUi.hideProgress()
                         notificationUi.showMessage(R.string.network_error)
                     }
