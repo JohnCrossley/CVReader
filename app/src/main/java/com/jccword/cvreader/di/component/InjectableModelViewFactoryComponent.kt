@@ -5,11 +5,12 @@ import com.jccword.cvreader.MainActivity
 import com.jccword.cvreader.di.InjectableModelViewFactory
 import com.jccword.cvreader.di.module.NavigationModule
 import com.jccword.cvreader.di.module.UiModule
+import com.jccword.cvreader.di.module.WebService
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
 
-@Component(modules = [ NavigationModule::class, UiModule::class ])
+@Component(modules = [ WebService::class, NavigationModule::class, UiModule::class ])
 interface InjectableModelViewFactoryComponent : AndroidInjector<InjectableModelViewFactory> {
 
     @Component.Builder
