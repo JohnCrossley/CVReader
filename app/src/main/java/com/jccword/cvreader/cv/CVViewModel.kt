@@ -27,7 +27,7 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
     init {
         subscriptions.add(cvService.getCV()
                 .doOnSubscribe { progressUi.showProgress() }
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ cv ->
                         cv.basics?.let { cv ->
@@ -39,16 +39,19 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
                             website.value = cv.website
                             summary.value = cv.summary
                         }
+
                         cv.work?.let {
                             work.value = it
                         }
 
                         progressUi.hideProgress()
                     },
-                    { t -> notificationUi.showMessage(R.string.network_error) }
-
-
-                ))
+                    { t ->
+                        progressUi.hideProgress()
+                        notificationUi.showMessage(R.string.network_error)
+                    }
+                )
+            )
     }
 
     override fun onCleared() {
