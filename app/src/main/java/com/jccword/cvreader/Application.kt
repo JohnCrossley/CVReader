@@ -6,12 +6,6 @@ import dagger.android.DaggerApplication
 
 class Application : DaggerApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
-
-        System.out.println("[JCC] - APP START ***********************************************************************")
-    }
-
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         val component = DaggerApplicationComponent.builder().app(this).build()
         component.inject(this)

@@ -44,22 +44,24 @@ class CVFragment : DaggerFragment() {
         model.summary.observe(this, Observer { summary.text = it })
 
         model.work.observe(this, Observer { it ->
-            for (j in it) {
+            for (placement in it) {
                 val job = layoutInflater.inflate(R.layout.inc_work_row, work, false)
 
-                job.company.text = j.company
-                job.position.text = j.position
-                job.startDate.text = j.startDate
-                job.endDate.text = j.endDate
-                job.jobSummary.text = j.summary
+                job.company.text = placement.company
+                job.position.text = placement.position
+                job.startDate.text = placement.startDate
+                job.endDate.text = placement.endDate
+                job.jobSummary.text = placement.summary
 
-                j.highlights?.let {
+                placement.highlights?.let {
                     job.jobHighlights.text = toBulletList(it)
                 }
 
                 work.addView(job)
             }
         })
+
+        model.skills.observe(this, Observer { skills.text = it })
     }
 
     private fun toBulletList(highlights: List<String>): String {

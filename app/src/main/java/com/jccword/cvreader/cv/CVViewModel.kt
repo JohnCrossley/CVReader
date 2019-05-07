@@ -1,8 +1,10 @@
 package com.jccword.cvreader.cv
 
+import android.content.res.Resources
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jccword.cvreader.R
+import com.jccword.cvreader.domain.Skill
 import com.jccword.cvreader.domain.Work
 import com.jccword.cvreader.service.CVService
 import com.jccword.cvreader.ui.NotificationUi
@@ -10,8 +12,9 @@ import com.jccword.cvreader.ui.ProgressUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.StringBuilder
 
-class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: NotificationUi): ViewModel() {
+class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: NotificationUi, resources: Resources): ViewModel() {
     private val subscriptions = CompositeDisposable()
 
     val name = MutableLiveData<String>()
@@ -23,6 +26,8 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
     val summary = MutableLiveData<String>()
 
     var work = MutableLiveData<List<Work>>()
+
+    var skills = MutableLiveData<String>()
 
     init {
         subscriptions.add(cvService.getCV()
@@ -44,6 +49,8 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
                             work.value = it
                         }
 
+                        skills.value = cv.skills.toBulletList(resources)
+
                         progressUi.hideProgress()
                     },
                     { t ->
@@ -59,3 +66,12 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
         subscriptions.dispose()
     }
 }
+
+private fun List<Skill>.toBulletList(resources: Resources): String {
+    val sb = StringBuilder()
+    for(skill in this) {
+        sb.append(resources.getString(R.string.skill_template, skill.name, skill.level))
+    }
+    return sb.toString()
+}
+

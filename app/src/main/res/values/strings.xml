@@ -4,4 +4,6 @@
     <string name="bullet_point">\u2022</string>
     <string name="newline">\n</string>
     <string name="network_error">Unable to retreive CV</string>
+    <string name="skill_template">\u2022 %s (%s)\n</string>
+    <string name="skills">Skills</string>
 </resources>

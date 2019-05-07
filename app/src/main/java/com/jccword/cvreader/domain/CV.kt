@@ -3,8 +3,7 @@ package com.jccword.cvreader.domain
 class CV {
     val basics: Basics = Basics()
     val work: List<Work> = mutableListOf()
-//    val skills: List<Skill> = mutableListOf()
-//    val interests: List<String> = mutableListOf()
+    val skills: List<Skill> = mutableListOf()
 }
 
 class Basics {
