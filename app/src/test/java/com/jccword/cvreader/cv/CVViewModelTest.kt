@@ -55,7 +55,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.just(cv))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
+        sut = CVViewModel(mockCVService)
 
         // verify
         verify(mockProgressUi).showProgress()
@@ -67,7 +67,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.just(cv))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
+        sut = CVViewModel(mockCVService)
 
         //verify
         verify(mockProgressUi).hideProgress()
@@ -79,7 +79,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.error(RuntimeException("oh no!")))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
+        sut = CVViewModel(mockCVService)
 
         // verify
         verify(mockNotificationUi).run { showMessage(R.string.network_error) }
@@ -91,7 +91,7 @@ class CVViewModelTest {
         `when`(mockCVService.getCV()).thenReturn(Single.error(RuntimeException("oh no!")))
 
         // run
-        sut = CVViewModel(mockCVService, mockProgressUi, mockNotificationUi, mockResources)
+        sut = CVViewModel(mockCVService)
 
         // verify
         verify(mockProgressUi).run { hideProgress() }
