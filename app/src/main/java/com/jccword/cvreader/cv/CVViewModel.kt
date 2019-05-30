@@ -1,21 +1,19 @@
 package com.jccword.cvreader.cv
 
-import android.content.res.Resources
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.jccword.cvreader.R
 import com.jccword.cvreader.domain.Skill
 import com.jccword.cvreader.domain.Work
 import com.jccword.cvreader.service.CVService
-import com.jccword.cvreader.ui.NotificationUi
-import com.jccword.cvreader.ui.ProgressUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.lang.StringBuilder
 
-class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: NotificationUi, resources: Resources): ViewModel() {
+class CVViewModel(cvService: CVService): ViewModel() {
     private val subscriptions = CompositeDisposable()
+
+    val state = MutableLiveData<State>()
 
     val name = MutableLiveData<String>()
     val label = MutableLiveData<String>()
@@ -31,9 +29,9 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
 
     init {
         subscriptions.add(cvService.getCV()
-                .doOnSubscribe { progressUi.showProgress() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { state.value = State.LOADING }
                 .subscribe({ cv ->
                         cv.basics.let { basics ->
                             name.value = basics.name
@@ -49,13 +47,13 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
                             work.value = it
                         }
 
-                        skills.value = cv.skills.toBulletList(resources)
+                        skills.value = cv.skills.toBulletList()
 
-                        progressUi.hideProgress()
+                        state.value = State.READY
                     },
                     {
-                        progressUi.hideProgress()
-                        notificationUi.showMessage(R.string.network_error)
+                        Log.e(TAG, it.message, it)
+                        state.value = State.ERROR
                     }
                 )
             )
@@ -65,13 +63,19 @@ class CVViewModel(cvService: CVService, progressUi: ProgressUi, notificationUi: 
         super.onCleared()
         subscriptions.dispose()
     }
+
+    companion object {
+        val TAG = "CVViewModel"
+    }
 }
 
-private fun List<Skill>.toBulletList(resources: Resources): String {
+private fun List<Skill>.toBulletList(): String {
+    val s = "\u2022 %s (%s)\n"
     val sb = StringBuilder()
     for(skill in this) {
-        sb.append(resources.getString(R.string.skill_template, skill.name, skill.level))
+        sb.append(String.format(s, skill.name, skill.level))
     }
     return sb.toString()
 }
+
 

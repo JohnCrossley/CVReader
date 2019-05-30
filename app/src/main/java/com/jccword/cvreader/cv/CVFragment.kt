@@ -6,10 +6,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.jccword.cvreader.R
 import com.jccword.cvreader.cv.CVViewModel
+import com.jccword.cvreader.cv.State
 import com.jccword.cvreader.di.InjectableModelViewFactory
 import com.jccword.cvreader.ui.Navigation
+import com.jccword.cvreader.ui.NotificationUi
+import com.jccword.cvreader.ui.ProgressUi
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_cv.*
 import kotlinx.android.synthetic.main.inc_work_row.view.*
 import javax.inject.Inject
@@ -18,6 +22,12 @@ class CVFragment : DaggerFragment() {
 
     @Inject
     lateinit var navigation: Navigation
+
+    @Inject
+    lateinit var progressUi: ProgressUi
+
+    @Inject
+    lateinit var notificationUi: NotificationUi
 
     @Inject
     lateinit var injectableModelViewFactory: InjectableModelViewFactory
@@ -34,6 +44,17 @@ class CVFragment : DaggerFragment() {
         setHasOptionsMenu(true)
 
         model = ViewModelProviders.of(this, injectableModelViewFactory).get(CVViewModel::class.java)
+
+        model.state.observe(this, Observer {
+            when(it) {
+                State.LOADING -> progressUi.showProgress()
+                State.READY -> progressUi.hideProgress()
+                State.ERROR -> {
+                    progressUi.hideProgress()
+                    notificationUi.showMessage(R.string.network_error)
+                }
+            }
+        })
 
         model.name.observe(this, Observer { name.text = it })
         model.label.observe(this, Observer { label.text = it })

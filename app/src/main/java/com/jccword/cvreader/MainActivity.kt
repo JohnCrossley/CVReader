@@ -2,9 +2,8 @@ package com.jccword.cvreader
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
-import com.jccword.cvreader.di.InjectableModelViewFactory
+import com.jccword.cvreader.ui.Navigation
 import com.jccword.cvreader.ui.NotificationUi
 import com.jccword.cvreader.ui.ProgressUi
 import dagger.android.support.DaggerAppCompatActivity
@@ -13,16 +12,16 @@ import javax.inject.Inject
 
 class MainActivity : ProgressUi, NotificationUi, DaggerAppCompatActivity() {
 
-    private lateinit var model: MainActivityViewModel
     @Inject
-    lateinit var injectableModelViewFactory: InjectableModelViewFactory
+    lateinit var navigation: Navigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-        model = ViewModelProviders.of(this, injectableModelViewFactory).get(MainActivityViewModel::class.java)
+        if (savedInstanceState == null)
+            navigation.toCV()
     }
 
     override fun showProgress(show: Boolean) {
